@@ -1,5 +1,6 @@
-import express from 'express';
+const express = require('express');
 
+// sample payload
 const trx = {
     "ID": 1308,
     "Amount": 12580,
