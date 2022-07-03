@@ -2,25 +2,20 @@ const express = require('express');
 
 // sample payload
 const trx = {
-    "ID": 1308,
-    "Amount": 12580,
+    "ID": 13082,
+    "Amount": 4500,
     "Currency": "NGN",
     "CustomerEmail": "anon8@customers.io",
     "SplitInfo": [
         {
             "SplitType": "FLAT",
-            "SplitValue": 45,
+            "SplitValue": 450,
             "SplitEntityId": "LNPYACC0019"
         },
         {
-            "SplitType": "RATIO",
-            "SplitValue": 3,
+            "SplitType": "FLAT",
+            "SplitValue": 2300,
             "SplitEntityId": "LNPYACC0011"
-        },
-        {
-            "SplitType": "PERCENTAGE",
-            "SplitValue": 3,
-            "SplitEntityId": "LNPYACC0015"
         }
     ]
 }
@@ -34,7 +29,13 @@ app.post('/split-payments/compute', (req, res) => {
     if (ID == trx.ID && 
         Amount == trx.Amount && 
         Currency == trx.Currency && 
-        CustomerEmail == trx.CustomerEmail ) {
+        CustomerEmail == trx.CustomerEmail &&
+        SplitInfo[0].SplitType == trx.SplitInfo[0].SplitType &&
+        SplitInfo[0].SplitValue == trx.SplitInfo[0].SplitValue &&
+        SplitInfo[0].SplitEntityId == trx.SplitInfo[0].SplitEntityId &&
+        SplitInfo[1].SplitType == trx.SplitInfo[1].SplitType &&
+        SplitInfo[1].SplitValue == trx.SplitInfo[1].SplitValue &&
+        SplitInfo[1].SplitEntityId == trx.SplitInfo[1].SplitEntityId) {
         res.status(200).json('OK');
     }
     else {
