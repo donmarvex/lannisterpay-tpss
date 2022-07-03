@@ -42,8 +42,23 @@ app.post('/split-payments/compute', (req, res) => {
         let split_amount2 = SplitInfo[1].SplitValue;
         let new_balance2 = new_balance1 - split_amount2;
         let final_balance = new_balance2;
-
-            // res.status(200).json('OK');
+        
+        // response
+        let response = {
+            "ID": ID,
+            "Balance": final_balance,
+            "SplitBreakdown": [
+                {
+                    "SplitEntityId": SplitInfo[0].SplitEntityId,
+                    "Amount": split_amount1,
+                },
+                {
+                    "SplitEntityId": SplitInfo[1].SplitEntityId,
+                    "Amount": split_amount2,
+                }
+            ]
+        }
+        res.status(200).json(response);
     }
     else {
         res.status(400).json('Bad Request');
