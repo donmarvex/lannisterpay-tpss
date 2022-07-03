@@ -36,7 +36,7 @@ const trx = {
             "SplitType": "PERCENTAGE",
             "SplitValue": 10,
             "SplitEntityId": "LNPYACC0215"
-        },
+        }
     ]
 }
 
@@ -46,42 +46,27 @@ app.use(express.json());
 // -- ENDPOINT -- //
 app.post('/split-payments/compute', (req, res) => {
     const { ID, Amount, Currency, CustomerEmail, SplitInfo } = req.body;
-    if (ID == trx.ID && 
-        Amount == trx.Amount && 
-        Currency == trx.Currency && 
-        CustomerEmail == trx.CustomerEmail &&
-        SplitInfo[0].SplitType == trx.SplitInfo[0].SplitType &&
-        SplitInfo[0].SplitValue == trx.SplitInfo[0].SplitValue &&
-        SplitInfo[0].SplitEntityId == trx.SplitInfo[0].SplitEntityId &&
-        SplitInfo[1].SplitType == trx.SplitInfo[1].SplitType &&
-        SplitInfo[1].SplitValue == trx.SplitInfo[1].SplitValue &&
-        SplitInfo[1].SplitEntityId == trx.SplitInfo[1].SplitEntityId) {
-        let initial_balance = Amount;
-        let split_amount1 = SplitInfo[0].SplitValue;
-        let new_balance1 = initial_balance - split_amount1;
-        let split_amount2 = SplitInfo[1].SplitValue;
-        let new_balance2 = new_balance1 - split_amount2;
-        let final_balance = new_balance2;
-        
-        // response
-        let response = {
-            "ID": ID,
-            "Balance": final_balance,
-            "SplitBreakdown": [
-                {
-                    "SplitEntityId": SplitInfo[0].SplitEntityId,
-                    "Amount": split_amount1,
-                },
-                {
-                    "SplitEntityId": SplitInfo[1].SplitEntityId,
-                    "Amount": split_amount2,
-                }
-            ]
-        }
-        res.status(200).json(response);
+    // check if all required fields are present
+    if (!ID || !Amount || !Currency || !CustomerEmail || !SplitInfo) {
+        res.status(400).send('Missing required fields');
     }
     else {
-        res.status(400).json('Bad Request');
+        // for all FLAT SplitTypes, compute Amount - SplitValue at each index
+        // using the difference of this value as the amount for the next SplitValue
+        // and the remaining amount as the amount for the next SplitValue
+        let remainingAmount = Amount;
+        for (let i = 0; i < SplitInfo.length; i++) {
+            if (SplitInfo[i].SplitType === 'FLAT') {
+                SplitInfo[i].SplitValue = remainingAmount - SplitInfo[i].SplitValue;
+                remainingAmount = SplitInfo[i].SplitValue;
+            }
+            // else if SplitType is PERCENTAGE, compute the percentage of the remaining amount
+            // and use this value as the amount for the next SplitValue
+            else if (SplitInfo[i].SplitType === 'PERCENTAGE') {
+                SplitInfo[i].SplitValue = remainingAmount - SplitInfo[i].SplitValue / 100;
+                remainingAmount = SplitInfo[i].SplitValue;
+            }
+        }
     }
 })
 
