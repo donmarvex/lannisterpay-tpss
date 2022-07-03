@@ -30,11 +30,11 @@ app.use(express.json());
 
 // -- ENDPOINT -- //
 app.post('/split-payments/compute', (req, res) => {
-    // const { ID, Amount, Currency, CustomerEmail, SplitInfo } = req.body;
-    if (req.body.ID == trx.ID && 
-        req.body.Amount == trx.Amount && 
-        req.body.Currency == trx.Currency && 
-        req.body.CustomerEmail == trx.CustomerEmail ) {
+    const { ID, Amount, Currency, CustomerEmail, SplitInfo } = req.body;
+    if (ID == trx.ID && 
+        Amount == trx.Amount && 
+        Currency == trx.Currency && 
+        CustomerEmail == trx.CustomerEmail ) {
         res.status(200).json('OK');
     }
     else {
