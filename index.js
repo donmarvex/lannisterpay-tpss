@@ -2,7 +2,7 @@ const express = require('express');
 
 // sample payload
 const trx = {
-    "ID": 13082,
+    "ID": 13092,
     "Amount": 4500,
     "Currency": "NGN",
     "CustomerEmail": "anon8@customers.io",
@@ -13,10 +13,30 @@ const trx = {
             "SplitEntityId": "LNPYACC0019"
         },
         {
-            "SplitType": "FLAT",
-            "SplitValue": 2300,
+            "SplitType": "RATIO",
+            "SplitValue": 3,
             "SplitEntityId": "LNPYACC0011"
-        }
+        },
+        {
+            "SplitType": "PERCENTAGE",
+            "SplitValue": 3,
+            "SplitEntityId": "LNPYACC0015"
+        },
+        {
+            "SplitType": "RATIO",
+            "SplitValue": 2,
+            "SplitEntityId": "LNPYACC0016"
+        },
+        {
+            "SplitType": "FLAT",
+            "SplitValue": 2450,
+            "SplitEntityId": "LNPYACC0029"
+        },
+        {
+            "SplitType": "PERCENTAGE",
+            "SplitValue": 10,
+            "SplitEntityId": "LNPYACC0215"
+        },
     ]
 }
 
