@@ -36,7 +36,14 @@ app.post('/split-payments/compute', (req, res) => {
         SplitInfo[1].SplitType == trx.SplitInfo[1].SplitType &&
         SplitInfo[1].SplitValue == trx.SplitInfo[1].SplitValue &&
         SplitInfo[1].SplitEntityId == trx.SplitInfo[1].SplitEntityId) {
-        res.status(200).json('OK');
+        let initial_balance = Amount;
+        let split_amount1 = SplitInfo[0].SplitValue;
+        let new_balance1 = initial_balance - split_amount1;
+        let split_amount2 = SplitInfo[1].SplitValue;
+        let new_balance2 = new_balance1 - split_amount2;
+        let final_balance = new_balance2;
+
+            // res.status(200).json('OK');
     }
     else {
         res.status(400).json('Bad Request');
