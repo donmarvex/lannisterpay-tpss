@@ -27,3 +27,16 @@ const trx = {
 const app = express();
 app.use(express.json());
 
+// -- ENDPOINT -- //
+app.post('/split-payments/compute', (req, res) => {
+    const { ID, Amount, Currency, CustomerEmail, SplitInfo } = req.body;
+
+})
+
+
+// -- LISTEN ENDPOINT -- //
+app.get('/', function (req, res) {
+    res.send('Hello World')
+  })
+  
+app.listen(3000)
