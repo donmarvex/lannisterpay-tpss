@@ -1,7 +1,9 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // -- ENDPOINT -- //
 app.post('/split-payments/compute', (req, res) => {
@@ -70,4 +72,6 @@ app.get('/', function (req, res) {
 })
 
 // -- START SERVER -- //
-app.listen(3000);
+app.listen(process.env.PORT, ()=> {
+    console.log(`app is running on port ${process.env.PORT}`);
+});
