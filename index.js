@@ -68,7 +68,7 @@ app.post('/split-payments/compute', (req, res) => {
 
 // -- ROOT -- //
 app.get('/', function (req, res) {
-    res.send('Server is running');
+    res.send('Lannisterpay TPSS Server is running');
 })
 
 // -- START SERVER -- //
