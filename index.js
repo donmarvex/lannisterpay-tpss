@@ -16,17 +16,17 @@ app.post('/split-payments/compute', (req, res) => {
     }
     // compute in this order:
     // 1. assign a variable to the amount of the transaction
-    let totalAmount = Amount;
+    let balance = Amount;
     // 2. for all FLAT splits, subtract the splitvalue from total amount
     SplitInfo.forEach(split => {
         if (split.SplitType === 'FLAT') {
-            totalAmount -= split.SplitValue;
+            balance -= split.SplitValue;
         }
     })
     // 3. for all PERCENTAGE splits, subtract the percentage of the splitvalue from the total amount
     SplitInfo.forEach(split => {
         if (split.SplitType === 'PERCENTAGE') {
-            totalAmount -= (split.SplitValue / 100) * totalAmount;
+            balance -= (split.SplitValue / 100) * balance;
         }
     })
     // 4. for all RATIO splits
@@ -41,11 +41,27 @@ app.post('/split-payments/compute', (req, res) => {
     // then subtract the result from the consecutive total amount
     SplitInfo.forEach(split => {
         if (split.SplitType === 'RATIO') {
-            totalAmount -= (split.SplitValue / totalRatio) * totalAmount;
-            totalAmount -= totalAmount;
+            balance -= (split.SplitValue / totalRatio) * balance;
+            balance -= balance;
         }
     })
-    res.status(200).json(totalAmount);
+    res.status(200).json(
+        {
+            ID: ID,
+            Balance: balance,
+            SplitBreakdown: // exclude the SplitType property from the response
+                SplitInfo.map(split => {
+                    return {
+                        SplitEntityId: split.SplitEntityId,
+                        Amount: 
+                            split.SplitType === 'FLAT' ? split.SplitValue :
+                            split.SplitType === 'PERCENTAGE' ? split.SplitValue:
+                            split.SplitValue
+                    }
+                })
+
+        }
+    );
 })
 
 // -- ROOT -- //
