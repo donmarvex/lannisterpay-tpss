@@ -68,7 +68,7 @@ app.post('/split-payments/compute', (req, res) => {
 
 // -- ROOT -- //
 app.get('/', function (req, res) {
-    res.send('Server is running on port 3000');
+    res.send('Server is running');
 })
 
 // -- START SERVER -- //
